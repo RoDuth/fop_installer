@@ -1,0 +1,34 @@
+image: Visual Studio 2019
+
+platform:
+  - x64
+
+skip_tags: true
+
+environment:
+  CHERE_INVOKING: 1
+  fop_ver: 2.9
+
+install:
+  - choco install openjdk -y
+
+build_script:
+  - for /f %%i in ('dir "C:\Program Files\OpenJDK\jdk*" /b') do "C:\Program Files"\OpenJDK\%%i\bin\jlink --output fop-%fop_ver%\jre --add-modules java.base,java.logging,java.desktop,java.xml
+  - C:\msys64\usr\bin\bash -lc "./get_fop.sh"
+  - C:\msys64\usr\bin\bash -lc "ls -a"
+  - C:\"Program Files (x86)"\NSIS\Bin\makensis build.nsi
+
+artifacts:
+  - path: '*-setup.exe'
+
+deploy:
+  provider: GitHub
+  on:
+    branch: main
+  release: v$(fop_ver)
+  description: ''
+  auth_token:
+    secure: 1DQsnZ2QkM52hjZfjJbkSJwu/YLvBil97w/vikbLgHblXXLJ3xnFxgfN6eE/AQT8
+  draft: false
+  prerelease: false
+  force_update: true
