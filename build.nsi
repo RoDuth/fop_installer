@@ -129,6 +129,12 @@ Section "Uninstall" SecUnMain
     RMDir /r "$INSTDIR"
 SectionEnd
 
+; should be the last section
+; hidden section, writes install size to registry
+Section "-Write Install Size"
+       !insertmacro MULTIUSER_RegistryAddInstallSizeInfo
+SectionEnd
+
 
 ;------------------------------
 ;  CALLBACK FUNCTIONS
